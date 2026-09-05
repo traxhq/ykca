@@ -31,6 +31,10 @@
       --gold-bright: #fbbf24;
       --gold-glow: rgba(245, 158, 11, 0.45);
       
+      --green-live: #22c55e;
+      --blue-trial: #38bdf8;
+      --red-delete: #ef4444;
+      
       --font-display: 'Cinzel', serif;
       --font-sans: 'Plus Jakarta Sans', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
@@ -84,9 +88,16 @@
     }
     .skip-intro-btn:hover { background: var(--gold-bright); color: #000; transform: scale(1.05); }
 
+    @keyframes live-pulse { 0% { transform: scale(1); opacity: 1; } 75%, 100% { transform: scale(2.5); opacity: 0; } }
+    @keyframes shimmer-sweep { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    @keyframes emoji-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    @keyframes logo-glow { 0%, 100% { filter: drop-shadow(0 2px 8px var(--gold-glow)); } 50% { filter: drop-shadow(0 4px 16px rgba(251, 191, 36, 0.7)); } }
+    @keyframes gold-pulse-border { 0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); border-color: var(--wood-border); } 50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.45); border-color: var(--gold-bright); } }
+
     .ripple-surface { position: relative; overflow: hidden; }
     .ripple-wave { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple-anim 0.5s linear; background-color: rgba(251, 191, 36, 0.35); pointer-events: none; }
     @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+    .icon-anim { display: inline-block; transition: transform 0.25s var(--ease-turbo); }
 
     header.site-header {
       position: sticky; top: 0; z-index: 100;
@@ -103,7 +114,7 @@
     }
 
     .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--maple-light); }
-    .brand-logo-img { width: 44px; height: 44px; object-fit: contain; }
+    .brand-logo-img { width: 44px; height: 44px; object-fit: contain; animation: logo-glow 4s ease-in-out infinite; }
     .brand-name { font-family: var(--font-display); font-size: 1.35rem; font-weight: 900; }
     .brand-name span { color: var(--gold-bright); }
 
@@ -120,40 +131,178 @@
     .nav-anchor-cta { color: var(--gold-bright); border-color: var(--gold-main); background: rgba(245, 158, 11, 0.1); }
     .nav-anchor-cta:hover { background: var(--gold-main); color: var(--wood-void); }
 
-    .mobile-nav-backdrop { position: fixed; inset: 0; background: rgba(10, 5, 2, 0.85); backdrop-filter: blur(8px); z-index: 1050; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+    .mobile-nav-backdrop {
+      position: fixed; inset: 0; background: rgba(10, 5, 2, 0.85); backdrop-filter: blur(8px);
+      z-index: 1050; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+    }
     .mobile-nav-backdrop.active { opacity: 1; visibility: visible; }
-    .mobile-drawer { position: fixed; top: 0; left: 0; bottom: 0; width: min(320px, 84vw); background: var(--wood-walnut); border-right: 2px solid var(--gold-main); z-index: 1100; transform: translateX(-100%); transition: transform 0.32s var(--ease-turbo); padding: 1.5rem 1.25rem; display: flex; flex-direction: column; }
+    .mobile-drawer {
+      position: fixed; top: 0; left: 0; bottom: 0; width: min(320px, 84vw);
+      background: linear-gradient(180deg, var(--wood-walnut) 0%, var(--wood-void) 100%);
+      border-right: 2px solid var(--gold-main); box-shadow: 10px 0 35px rgba(0, 0, 0, 0.85);
+      z-index: 1100; transform: translateX(-100%); transition: transform 0.32s var(--ease-turbo);
+      display: flex; flex-direction: column; padding: 1.5rem 1.25rem 2rem; overflow-y: auto;
+    }
     .mobile-drawer.open { transform: translateX(0); }
-    .mobile-menu-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
-    .mobile-nav-item .nav-anchor { width: 100%; padding: 12px; background: rgba(45, 24, 13, 0.55); border: 1px solid var(--wood-border); border-radius: var(--radius-md); }
+    .drawer-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1.25rem; border-bottom: 1.5px solid var(--wood-border); margin-bottom: 1.5rem; }
+    .drawer-close-btn { background: var(--wood-card); border: 1px solid var(--wood-border-bright); color: var(--gold-bright); border-radius: 50%; width: 36px; height: 36px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .mobile-menu-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+    .mobile-nav-item .nav-anchor { width: 100%; font-size: 1rem; padding: 12px 14px; background: rgba(45, 24, 13, 0.55); border: 1px solid var(--wood-border); border-radius: var(--radius-md); justify-content: flex-start; }
 
     .hero { position: relative; padding: 5rem 0 6rem; border-bottom: 2px solid var(--wood-border); }
     .hero-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 3.5rem; align-items: center; }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 8px; background: var(--wood-walnut); border: 1.5px solid var(--gold-main);
+      padding: 6px 18px; border-radius: 999px; font-size: 0.88rem; color: var(--gold-bright); font-weight: 700; margin-bottom: 1.2rem;
+    }
     .hero-title { font-family: var(--font-display); font-size: clamp(2.4rem, 4.8vw, 4rem); font-weight: 900; line-height: 1.15; margin-bottom: 1.2rem; }
-    .hud-card { background: var(--wood-card); border: 2px solid var(--wood-border); border-radius: var(--radius-lg); padding: 1.8rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
-    .hud-stat { background: rgba(14, 7, 4, 0.75); border: 1px solid var(--wood-border); border-radius: var(--radius-md); padding: 1.1rem; cursor: pointer; }
-    .hud-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--maple-muted); text-transform: uppercase; }
+    .hero-desc { color: var(--maple-muted); font-size: 1.15rem; max-width: 640px; }
+
+    .hud-card {
+      background: linear-gradient(145deg, var(--wood-card) 0%, var(--wood-walnut) 100%);
+      border: 2px solid var(--wood-border); border-radius: var(--radius-lg); padding: 1.8rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem;
+    }
+    .hud-stat {
+      background: rgba(14, 7, 4, 0.75); border: 1px solid var(--wood-border); border-radius: var(--radius-md); padding: 1.1rem;
+      cursor: pointer; transition: transform 0.2s ease;
+    }
+    .hud-stat:hover { border-color: var(--gold-main); transform: translateY(-4px); }
+    .hud-label { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; color: var(--maple-muted); }
     .hud-val { font-family: var(--font-display); font-size: 1.45rem; font-weight: 900; color: var(--gold-bright); }
+    .countdown-box { grid-column: 1 / -1; background: rgba(245, 158, 11, 0.12); border: 1px dashed var(--gold-main); border-radius: var(--radius-sm); padding: 10px 14px; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.85rem; color: var(--gold-bright); }
 
-    dialog { width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; margin: 0; padding: 0; border: none; background: rgba(14, 7, 4, 0.98); color: var(--maple-light); position: fixed; inset: 0; overflow-y: auto; z-index: 1000; }
-    .modal-inner-container { width: min(1160px, 92%); margin: 3.5rem auto; }
-    .modal-header-bar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; border-bottom: 2px solid var(--wood-border); padding-bottom: 1rem; }
-    .close-btn { background: var(--wood-walnut); border: 1.5px solid var(--wood-border-bright); color: var(--maple-light); padding: 8px 18px; border-radius: 999px; cursor: pointer; font-family: var(--font-mono); }
+    dialog {
+      width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; margin: 0; padding: 0; border: none;
+      background: linear-gradient(180deg, rgba(14, 7, 4, 0.97) 0%, rgba(22, 12, 7, 0.99) 100%),
+        url('https://uploads.onecompiler.io/44mga3aud/44z3hzrhe/chess-wooden-wallpaper.png') center/cover fixed no-repeat;
+      color: var(--maple-light); position: fixed; inset: 0; overflow-y: auto; z-index: 1000;
+    }
+    dialog[open] { opacity: 1; }
+    dialog::backdrop { background: rgba(8, 4, 2, 0.96); backdrop-filter: blur(20px); }
 
-    .form-input-field { background: var(--wood-dark); border: 1.5px solid var(--wood-border); border-radius: var(--radius-sm); padding: 12px 14px; color: var(--maple-light); width: 100%; margin-top: 4px; font-size: 0.95rem; }
-    .form-input-field:focus { border-color: var(--gold-bright); outline: none; }
+    .modal-inner-container { width: min(1180px, 94%); margin: 3rem auto 5rem; position: relative; }
+    .modal-header-bar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; border-bottom: 2px solid var(--wood-border); padding-bottom: 1.2rem; }
+    .close-btn { background: var(--wood-walnut); border: 1.5px solid var(--wood-border-bright); color: var(--maple-light); padding: 8px 18px; border-radius: 999px; cursor: pointer; font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; }
+
+    .btn { font-family: inherit; font-weight: 800; font-size: 0.95rem; padding: 12px 24px; border-radius: var(--radius-md); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; transition: all 0.2s ease; }
+    .btn-gold { background: linear-gradient(135deg, var(--gold-bright), var(--gold-main)); color: #1a0e05; }
+    .btn-wood { background: rgba(40, 23, 12, 0.85); color: var(--maple-light); border: 1.5px solid var(--wood-border); }
+    .btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--red-delete); border: 1.5px solid var(--red-delete); }
+    .btn-danger:hover { background: var(--red-delete); color: #fff; }
+
     .pedagogy-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .pedagogy-box { background: var(--wood-walnut); border: 1.5px solid var(--wood-border); border-radius: var(--radius-md); padding: 1.8rem; }
+    .step-badge { display: inline-flex; background: rgba(245, 158, 11, 0.18); border: 1px solid var(--gold-main); color: var(--gold-bright); font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; margin-bottom: 0.8rem; }
+    .box-heading { font-family: var(--font-display); font-size: 1.35rem; margin-bottom: 0.5rem; color: var(--maple-light); }
+    .box-desc { color: var(--maple-muted); font-size: 0.95rem; }
 
-    /* Keypad Modal Engine */
-    .portal-lock-wrap { background: var(--wood-walnut); border: 2px solid var(--gold-main); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 400px; margin: 2rem auto; text-align: center; }
-    .portal-pin-input { background: var(--wood-dark); border: 2px solid var(--wood-border); color: var(--gold-bright); text-align: center; font-family: var(--font-mono); font-size: 1.8rem; letter-spacing: 0.35em; padding: 10px; border-radius: var(--radius-md); width: 100%; margin: 1rem 0; pointer-events: none; }
+    .schedule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+    .schedule-card { background: var(--wood-walnut); border: 1.5px solid var(--wood-border); border-radius: var(--radius-md); padding: 2rem; }
+    .time-pill { background: rgba(14, 7, 4, 0.9); border: 1.5px solid var(--gold-main); border-radius: var(--radius-sm); padding: 10px 14px; font-family: var(--font-mono); font-size: 0.92rem; font-weight: 700; color: var(--gold-bright); margin-top: 1rem; }
+
+    .advait-portrait-card { display: grid; grid-template-columns: 480px 1fr; gap: 2.5rem; background: var(--wood-walnut); border: 2px solid var(--gold-main); border-radius: var(--radius-lg); padding: 2.2rem; align-items: center; }
+    .achievement-img-wrap-916 { width: 100%; aspect-ratio: 9 / 16; min-height: 520px; max-height: 750px; background: var(--wood-dark); border: 2px solid var(--wood-border-bright); border-radius: var(--radius-md); overflow: hidden; }
+    .achievement-img-wrap-916 img { width: 100%; height: 100%; object-fit: contain; }
+
+    .coach-layout-full { display: grid; grid-template-columns: 320px 1fr; gap: 3rem; align-items: start; }
+    .coach-image-frame { border-radius: var(--radius-md); overflow: hidden; border: 2px solid var(--gold-bright); }
+    .coach-image-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .info-matrix-full { background: var(--wood-void); border: 1px dashed var(--wood-border-bright); border-radius: var(--radius-md); padding: 1.5rem; margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+
+    .keypad-contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+    .keypad-button-card { background: var(--wood-walnut); border: 2px solid var(--wood-border); border-radius: var(--radius-lg); padding: 1.8rem 1.2rem; text-align: center; text-decoration: none; color: var(--maple-light); }
+    .keypad-img-icon { width: 70px; height: 70px; object-fit: contain; margin-bottom: 1rem; }
+
+    .form-input-field { background: var(--wood-dark); border: 1.5px solid var(--wood-border); border-radius: var(--radius-sm); padding: 12px 14px; color: var(--maple-light); width: 100%; font-size: 0.95rem; }
+    .form-input-field:focus { border-color: var(--gold-bright); outline: none; }
+
+    /* Privacy & Anti-Screenshot CSS */
+    .screenshot-protected {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    @media print {
+      body, dialog, .crm-table-container, .modal-inner-container {
+        display: none !important;
+        visibility: hidden !important;
+      }
+    }
+    .security-blur-active {
+      filter: blur(40px) brightness(0.2) !important;
+      transition: filter 0.1s ease !important;
+      pointer-events: none !important;
+    }
+
+    /* Coach Portal Modal Styles */
+    .portal-lock-wrap {
+      background: var(--wood-walnut); border: 2px solid var(--gold-main); border-radius: var(--radius-lg);
+      padding: 2.8rem 2rem; max-width: 440px; margin: 2rem auto; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+    }
+    .portal-pin-input {
+      background: var(--wood-dark); border: 2px solid var(--wood-border); color: var(--gold-bright);
+      text-align: center; font-family: var(--font-mono); font-size: 1.8rem; letter-spacing: 0.4em;
+      padding: 12px; border-radius: var(--radius-md); width: 100%; margin: 1.2rem 0 1rem;
+    }
+
     .pin-keypad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 1rem 0; }
-    .pin-key-btn { background: var(--wood-dark); border: 1.5px solid var(--wood-border); border-radius: var(--radius-md); color: var(--maple-light); font-family: var(--font-mono); font-size: 1.4rem; padding: 12px 0; cursor: pointer; }
+    .pin-key-btn { background: var(--wood-dark); border: 1.5px solid var(--wood-border); border-radius: var(--radius-md); color: var(--maple-light); font-family: var(--font-mono); font-size: 1.4rem; padding: 14px 0; cursor: pointer; }
     .pin-key-btn:active { background: var(--gold-main); color: #000; }
 
     #pinKeypadContainer { display: none; }
+
+    .crm-metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin: 1.5rem 0 1.8rem; }
+    .crm-metric-box { background: var(--wood-walnut); border: 1.5px solid var(--wood-border); border-radius: var(--radius-md); padding: 1.2rem 1.4rem; }
+
+    .crm-table-container { background: var(--wood-walnut); border: 1.5px solid var(--wood-border); border-radius: var(--radius-lg); overflow-x: auto; position: relative; }
+    .crm-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .crm-table th { background: var(--wood-dark); font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; color: var(--gold-bright); padding: 14px 16px; border-bottom: 2px solid var(--wood-border); }
+    .crm-table td { padding: 14px 16px; border-bottom: 1px solid var(--wood-border); font-size: 0.9rem; color: var(--maple-light); }
+    .crm-table tr:hover td { background: var(--wood-card); }
+
+    .badge-crm { display: inline-block; padding: 4px 10px; border-radius: 999px; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; }
+    .badge-Lead { background: rgba(245, 158, 11, 0.2); color: var(--gold-bright); border: 1px solid var(--gold-main); }
+    .badge-Trial { background: rgba(56, 189, 248, 0.2); color: var(--blue-trial); border: 1px solid var(--blue-trial); }
+    .badge-Enrolled { background: rgba(34, 197, 94, 0.2); color: var(--green-live); border: 1px solid var(--green-live); }
+    .badge-Archived { background: rgba(255, 255, 255, 0.1); color: var(--maple-muted); border: 1px solid var(--wood-border); }
+
+    /* Floating Bulk Delete Toolbar */
+    .bulk-delete-bar {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(120px);
+      background: var(--wood-card); border: 2px solid var(--red-delete); border-radius: 999px;
+      padding: 10px 24px; display: flex; align-items: center; gap: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.85);
+      z-index: 1200; opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bulk-delete-bar.active {
+      transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto;
+    }
+
+    /* 3-Dot Action Menu */
+    .dots-menu-btn {
+      background: transparent; border: none; color: var(--gold-bright); font-size: 1.4rem;
+      cursor: pointer; padding: 4px 10px; border-radius: 4px;
+    }
+    .dots-menu-btn:hover { background: var(--wood-border); }
+
+    .row-action-popover {
+      display: none; position: absolute; right: 24px; top: 10px; background: var(--wood-dark);
+      border: 1.5px solid var(--wood-border-bright); border-radius: var(--radius-sm);
+      padding: 6px; z-index: 60; box-shadow: 0 10px 25px rgba(0,0,0,0.9); flex-direction: column; gap: 4px; min-width: 145px;
+    }
+    .row-action-popover.open { display: flex; }
+    .row-action-popover button {
+      background: transparent; border: none; color: var(--maple-light); text-align: left;
+      padding: 8px 12px; font-size: 0.85rem; cursor: pointer; border-radius: 4px; font-family: var(--font-sans);
+    }
+    .row-action-popover button:hover { background: var(--wood-card-hover); color: var(--gold-bright); }
+
+    input[type="checkbox"].crm-row-check {
+      accent-color: var(--gold-bright); width: 18px; height: 18px; cursor: pointer;
+    }
+
     @media (max-width: 960px) {
-      .hero-grid, .pedagogy-grid { grid-template-columns: 1fr; }
+      .hero-grid, .pedagogy-grid, .coach-layout-full, .advait-portrait-card { grid-template-columns: 1fr; }
       .primary-nav-menu { display: none; }
       .mobile-menu-btn { display: inline-flex; }
       #pinKeypadContainer { display: block !important; }
@@ -162,72 +311,150 @@
   </style>
 
   <script>
-    // Security Hooks against basic inspection
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => {
-      if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S'))) {
-        e.preventDefault();
-        return false;
+    window.dismissSplash = function() {
+      const s = document.getElementById('splash-intro');
+      if (s && !s.classList.contains('fade-out')) {
+        s.classList.add('fade-out');
+        setTimeout(() => { if (s.parentNode) s.parentNode.removeChild(s); }, 800);
       }
-      if (e.altKey && (e.key === 'c' || e.key === 'C')) {
-        e.preventDefault();
-        window.openDialog('modal-coach-portal');
-      }
-    });
+    };
 
     window.openDialog = function(id) {
+      window.closeMobileDrawer();
       const d = document.getElementById(id);
-      if (d && typeof d.showModal === 'function') d.showModal();
+      if (d && typeof d.showModal === 'function') {
+        d.showModal();
+        if (id === 'modal-coach-portal') {
+          setTimeout(() => {
+            const input = document.getElementById('portalPinField');
+            if (input && window.innerWidth > 960) input.focus();
+          }, 150);
+          window.startCrmPolling();
+        }
+      }
     };
+
     window.closeDialog = function(id) {
       const d = document.getElementById(id);
       if (d) d.close();
+      if (id === 'modal-coach-portal') window.stopCrmPolling();
     };
+
+    window.toggleMobileDrawer = function() {
+      const drawer = document.getElementById('mobileDrawer');
+      const backdrop = document.getElementById('drawerBackdrop');
+      if (drawer && backdrop) {
+        drawer.classList.toggle('open');
+        backdrop.classList.toggle('active');
+      }
+    };
+
+    window.closeMobileDrawer = function() {
+      const drawer = document.getElementById('mobileDrawer');
+      const backdrop = document.getElementById('drawerBackdrop');
+      if (drawer && backdrop) {
+        drawer.classList.remove('open');
+        backdrop.classList.remove('active');
+      }
+    };
+
+    // Hotkey Listeners
+    window.addEventListener('keydown', function(e) {
+      // Alt + Shift + C: Direct Passwordless Access
+      if (e.altKey && e.shiftKey && (e.key === 'c' || e.key === 'C')) {
+        e.preventDefault();
+        window.openDialog('modal-coach-portal');
+        window.unlockPortalDirectly();
+        return;
+      }
+      // Alt + C: Open with password clearance
+      if (e.altKey && !e.shiftKey && (e.key === 'c' || e.key === 'C')) {
+        e.preventDefault();
+        window.openDialog('modal-coach-portal');
+        return;
+      }
+      // Block F12 and standard inspection keys
+      if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S'))) {
+        e.preventDefault();
+      }
+      // Anti-Screenshot shortcuts detection
+      if (e.key === 'PrintScreen' || (e.ctrlKey && e.shiftKey && (e.key === 'S' || e.key === 's')) || (e.metaKey && e.shiftKey && (e.key === '3' || e.key === '4'))) {
+        window.triggerPrivacyBlur();
+      }
+    });
+
+    // Window Visibility and Privacy Screen Triggers
+    window.triggerPrivacyBlur = function() {
+      const crmArea = document.getElementById('modal-coach-portal');
+      if (crmArea && crmArea.open) {
+        crmArea.classList.add('security-blur-active');
+        setTimeout(() => crmArea.classList.remove('security-blur-active'), 2000);
+      }
+    };
+
+    window.addEventListener('blur', function() {
+      const crmArea = document.getElementById('modal-coach-portal');
+      if (crmArea && crmArea.open) crmArea.classList.add('security-blur-active');
+    });
+
+    window.addEventListener('focus', function() {
+      const crmArea = document.getElementById('modal-coach-portal');
+      if (crmArea) crmArea.classList.remove('security-blur-active');
+    });
   </script>
 </head>
 <body>
 
-  <!-- Fullscreen Video Splash -->
-  <div id="splash-intro">
+  <div id="splash-intro" aria-label="Young Knights Intro Animation">
     <video id="intro-video" autoplay muted playsinline preload="auto">
       <source src="https://railcar.web.app/ykca-intro.mp4" type="video/mp4">
     </video>
-    <button type="button" class="skip-intro-btn" onclick="document.getElementById('splash-intro').classList.add('fade-out')">Skip Intro ✕</button>
+    <button type="button" class="skip-intro-btn" onclick="dismissSplash()">Skip Intro ✕</button>
   </div>
 
-  <div id="drawerBackdrop" class="mobile-nav-backdrop" onclick="document.getElementById('mobileDrawer').classList.remove('open'); this.classList.remove('active');"></div>
+  <div id="drawerBackdrop" class="mobile-nav-backdrop" onclick="closeMobileDrawer()"></div>
 
-  <!-- Mobile Drawer -->
-  <aside id="mobileDrawer" class="mobile-drawer">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
+  <aside id="mobileDrawer" class="mobile-drawer" aria-label="Mobile Navigation Menu">
+    <div class="drawer-header">
       <div class="brand">
-        <img src="https://uploads.onecompiler.io/44mga3aud/44z3hzrhe/ykca%20logo.png" class="brand-logo-img" alt="Logo">
-        <div class="brand-name">Young<span>Knights</span></div>
+        <img src="https://uploads.onecompiler.io/44mga3aud/44z3hzrhe/ykca%20logo.png" alt="Young Knights Logo" style="width: 32px; height: 32px; object-fit: contain;">
+        <div class="brand-name" style="font-size: 1.15rem;">Young<span>Knights</span></div>
       </div>
-      <button type="button" class="close-btn" onclick="document.getElementById('mobileDrawer').classList.remove('open'); document.getElementById('drawerBackdrop').classList.remove('active');">✕</button>
+      <button type="button" class="drawer-close-btn" onclick="closeMobileDrawer()">✕</button>
     </div>
+
     <ul class="mobile-menu-list">
-      <li class="mobile-nav-item"><a href="#" class="nav-anchor" onclick="openDialog('modal-steps')">📖 Step Workbooks</a></li>
-      <li class="mobile-nav-item"><a href="#" class="nav-anchor" onclick="openDialog('modal-schedule')">📅 Class Batches</a></li>
-      <li class="mobile-nav-item"><a href="#" class="nav-anchor" onclick="openDialog('modal-enquiry')">⚡ Online Enquiry</a></li>
-      <li class="mobile-nav-item"><a href="#" class="nav-anchor" onclick="openDialog('modal-coach-portal')">🛡️ Coach Portal (Alt+C)</a></li>
+      <li class="mobile-nav-item"><a href="#achievements" class="nav-anchor" onclick="openDialog('modal-achievements'); return false;"><span class="icon-anim">🏆</span> Hall of Fame</a></li>
+      <li class="mobile-nav-item"><a href="#steps" class="nav-anchor" onclick="openDialog('modal-steps'); return false;"><span class="icon-anim">📖</span> Step Workbooks</a></li>
+      <li class="mobile-nav-item"><a href="#batches" class="nav-anchor" onclick="openDialog('modal-schedule'); return false;"><span class="icon-anim">📅</span> Class Batches</a></li>
+      <li class="mobile-nav-item"><a href="#coach" class="nav-anchor" onclick="openDialog('modal-coach'); return false;"><img src="https://uploads.onecompiler.io/44mga3aud/44z3hzrhe/Chess-Coach-Badrinath.jpg" alt="Coach Badrinath" class="nav-coach-avatar"><span>Coach Badrinath</span></a></li>
+      <li class="mobile-nav-item"><a href="#tournaments" class="nav-anchor" onclick="openDialog('modal-lichess'); return false;"><span class="icon-anim">⚔️</span> Lichess Arena</a></li>
+      <li class="mobile-nav-item"><a href="#contact" class="nav-anchor" onclick="openDialog('modal-contact'); return false;"><span class="icon-anim">📍</span> Contact Academy</a></li>
+      <li class="mobile-nav-item" style="margin-top: 0.5rem;"><a href="#enquiry" class="nav-anchor nav-anchor-cta" onclick="openDialog('modal-enquiry'); return false;" style="justify-content: center;"><span class="icon-anim">⚡</span> Online Enquiry</a></li>
+      <li class="mobile-nav-item" style="margin-top: 0.5rem;"><a href="#coach-portal" class="nav-anchor" onclick="openDialog('modal-coach-portal'); return false;" style="color: var(--maple-muted); font-size: 0.85rem;"><span class="icon-anim">🛡️</span> Coach CRM (Alt+C)</a></li>
     </ul>
   </aside>
 
-  <!-- Site Header -->
   <header class="site-header">
     <div class="container nav-inner">
       <div class="nav-left-cluster">
-        <button type="button" class="mobile-menu-btn" onclick="document.getElementById('mobileDrawer').classList.add('open'); document.getElementById('drawerBackdrop').classList.add('active');">☰</button>
+        <button type="button" class="mobile-menu-btn" onclick="toggleMobileDrawer()">☰</button>
         <a href="#" class="brand">
-          <img src="https://uploads.onecompiler.io/44mga3aud/44z3hzrhe/ykca%20logo.png" class="brand-logo-img" alt="Logo">
+          <img src="https://uploads.onecompiler.io/44mga3aud/44z3hzrhe/ykca%20logo.png" alt="Young Knights Logo" class="brand-logo-img">
           <div class="brand-name">Young<span>Knights</span></div>
         </a>
       </div>
-      <nav class="primary-nav-menu">
-        <a href="#" class="nav-anchor" onclick="openDialog('modal-steps')">Step Workbooks</a>
-        <a href="#" class="nav-anchor" onclick="openDialog('modal-schedule')">Class Batches</a>
-        <a href="#" class="nav-anchor nav-anchor-cta" onclick="openDialog('modal-enquiry')">⚡ Online Enquiry</a>
+      
+      <nav aria-label="Primary Navigation">
+        <ul class="primary-nav-menu">
+          <li class="nav-item"><a href="#achievements" class="nav-anchor" onclick="openDialog('modal-achievements'); return false;"><span class="icon-anim">🏆</span> Hall of Fame</a></li>
+          <li class="nav-item"><a href="#steps" class="nav-anchor" onclick="openDialog('modal-steps'); return false;"><span class="icon-anim">📖</span> Step Workbooks</a></li>
+          <li class="nav-item"><a href="#batches" class="nav-anchor" onclick="openDialog('modal-schedule'); return false;"><span class="icon-anim">📅</span> Class Batches</a></li>
+          <li class="nav-item"><a href="#coach" class="nav-anchor" onclick="openDialog('modal-coach'); return false;"><img src="https://uploads.onecompiler.io/44mga3aud/44z3hzrhe/Chess-Coach-Badrinath.jpg" alt="Coach Badrinath" class="nav-coach-avatar"><span>Coach Badrinath</span></a></li>
+          <li class="nav-item"><a href="#tournaments" class="nav-anchor" onclick="openDialog('modal-lichess'); return false;"><span class="icon-anim">⚔️</span> Lichess Arena</a></li>
+          <li class="nav-item"><a href="#contact" class="nav-anchor" onclick="openDialog('modal-contact'); return false;"><span class="icon-anim">📍</span> Contact</a></li>
+          <li class="nav-item"><a href="#enquiry" class="nav-anchor nav-anchor-cta" onclick="openDialog('modal-enquiry'); return false;"><span class="icon-anim">⚡</span> Online Enquiry</a></li>
+        </ul>
       </nav>
     </div>
   </header>
@@ -237,17 +464,40 @@
       <div class="container">
         <div class="hero-grid">
           <div>
-            <h1 class="hero-title">Master The 64 Squares.<br><span style="color: var(--gold-bright);">Precision, Tactics & Vision.</span></h1>
-            <p>Structured chess training powered by the proven Step-by-Step Workbook System and tournament mentorship by Candidate Master & FIDE Instructor Badrinath S.</p>
+            <div class="status-badge">
+              <span class="ping-dot"></span> 
+              <span>2 Offline Classes / Week in Priyadarshini Nagar, Gorimedu</span>
+            </div>
+            <h1 class="hero-title">Master The 64 Squares.<br><span class="shimmer">Precision, Tactics & Vision.</span></h1>
+            <p class="hero-desc">
+              Structured chess training powered by the proven <strong>Step-by-Step Workbook System (Step 1 to Step 5+)</strong> and tournament mentorship by Candidate Master & FIDE Instructor Badrinath S.
+            </p>
           </div>
+
           <div class="hud-card">
             <div class="hud-stat" onclick="openDialog('modal-steps')">
-              <span class="hud-label">Method</span>
-              <span class="hud-val">Step 1-5+</span>
+              <span class="hud-label">STEP by STEP</span>
+              <span class="hud-val">Coaching</span>
+              <p class="hud-sub">for all levels</p>
+            </div>
+            <div class="hud-stat" onclick="openDialog('modal-coach')">
+              <span class="hud-label">Live Blitz Elo</span>
+              <span class="hud-val" id="liveBlitzElo">2200+</span>
+              <p class="hud-sub">@Battery_bad (Lichess)</p>
             </div>
             <div class="hud-stat" onclick="openDialog('modal-schedule')">
-              <span class="hud-label">Offline Slots</span>
-              <span class="hud-val">Sat & Sun</span>
+              <span class="hud-label">Weekly Offline</span>
+              <span class="hud-val">2 Slots</span>
+              <p class="hud-sub">Sat 6:30 PM & Sun 10:30 AM</p>
+            </div>
+            <div class="hud-stat" onclick="openDialog('modal-lichess')">
+              <span class="hud-label">Online Arena</span>
+              <span class="hud-val">Once / Month</span>
+              <p class="hud-sub">Any Sunday @ 6:00 PM IST</p>
+            </div>
+            <div class="countdown-box">
+              <span>⏳ Next Batch In:</span>
+              <span id="batchCountdown" style="font-weight: 700; color: #fff;">Calculating...</span>
             </div>
           </div>
         </div>
@@ -255,21 +505,24 @@
     </section>
   </main>
 
-  <!-- Public Enquiry Modal -->
   <dialog id="modal-enquiry">
     <div class="modal-inner-container">
       <div class="modal-header-bar">
-        <h2 class="hero-title" style="font-size: 2rem; margin:0;">Online Chess Training Enquiry</h2>
-        <button type="button" class="close-btn" onclick="closeDialog('modal-enquiry')">✕</button>
-      </div>
-      <form id="onlineEnquiryForm" onsubmit="handlePublicSubmission(event)" class="pedagogy-grid" style="background: var(--wood-walnut); padding: 2rem; border-radius: var(--radius-lg); border: 1.5px solid var(--wood-border);">
         <div>
-          <label class="hud-label">Student Name *</label>
-          <input type="text" id="eq_name" class="form-input-field" required>
+          <h2 class="modal-title">Online Chess Training Enquiry</h2>
+          <p class="modal-sub">Submit student details for slot scheduling with CM Badrinath.</p>
+        </div>
+        <button type="button" class="close-btn" onclick="closeDialog('modal-enquiry')">ESC / CLOSE ✕</button>
+      </div>
+
+      <form id="onlineEnquiryForm" onsubmit="submitPublicEnquiry(event)" class="pedagogy-grid" style="background: var(--wood-walnut); border: 1.5px solid var(--wood-border); border-radius: var(--radius-lg); padding: 2rem;">
+        <div>
+          <label class="hud-label">Student Full Name *</label>
+          <input type="text" id="eq_name" class="form-input-field" placeholder="e.g. Advait Kumar" required>
         </div>
         <div>
-          <label class="hud-label">Age *</label>
-          <input type="number" id="eq_age" class="form-input-field" min="4" max="80" required>
+          <label class="hud-label">Student Age *</label>
+          <input type="number" id="eq_age" class="form-input-field" min="4" max="80" placeholder="e.g. 8" required>
         </div>
         <div>
           <label class="hud-label">Current Step / Level *</label>
@@ -279,13 +532,13 @@
             <option value="Absolute Beginner">Absolute Beginner (Rules & Movement)</option>
             <option value="Step 1">Step 1 (Fundamentals & Checkmates)</option>
             <option value="Step 2">Step 2 (Forks, Pins & Double Attacks)</option>
-            <option value="Step 3">Step 3 (Tactics & Endgames)</option>
-            <option value="Step 4/5">Step 4/5 (Master Preparation)</option>
+            <option value="Step 3">Step 3 (Discovered Attacks & Endgames)</option>
+            <option value="Step 4/5">Step 4/5 (Tournament Strategy & Master Prep)</option>
             <option value="FIDE Rated">FIDE Rated Player</option>
           </select>
         </div>
         <div>
-          <label class="hud-label">Format / Platform *</label>
+          <label class="hud-label">Preferred Mode *</label>
           <select id="eq_platform" class="form-input-field" required>
             <option value="Offline (Gorimedu Center)" selected>Offline (Gorimedu Center)</option>
             <option value="Google Meet">Google Meet</option>
@@ -294,176 +547,777 @@
         </div>
         <div style="grid-column: 1 / -1;">
           <label class="hud-label">Parent WhatsApp Number *</label>
-          <input type="tel" id="eq_phone" class="form-input-field" required>
+          <input type="tel" id="eq_phone" class="form-input-field" placeholder="e.g. 9488083418" required>
         </div>
         <div style="grid-column: 1 / -1;">
-          <label class="hud-label">Notes</label>
-          <textarea id="eq_notes" class="form-input-field" style="height: 80px;"></textarea>
+          <label class="hud-label">Notes / Learning Goals</label>
+          <textarea id="eq_notes" class="form-input-field" style="height: 80px;" placeholder="e.g. Needs assessment, looking for weekend batches."></textarea>
         </div>
-        <div style="grid-column: 1 / -1;">
-          <button type="submit" id="subBtn" class="nav-anchor nav-anchor-cta" style="width: 100%; justify-content: center; padding: 12px;">Submit Enquiry</button>
+        <div style="grid-column: 1 / -1; text-align: center; margin-top: 1rem;">
+          <button type="submit" id="eq_btn" class="btn btn-gold ripple-surface" style="width: 100%; justify-content: center;">
+            <span>⚡ Submit Enquiry to Academy</span>
+          </button>
         </div>
       </form>
     </div>
   </dialog>
 
-  <!-- Coach Portal Shell (Empty Shell to prevent Ctrl+U exposure) -->
-  <dialog id="modal-coach-portal">
+  <dialog id="modal-achievements">
     <div class="modal-inner-container">
       <div class="modal-header-bar">
-        <h2 class="hero-title" style="font-size: 2rem; margin:0;">Coach Workspace</h2>
-        <button type="button" class="close-btn" onclick="closeDialog('modal-coach-portal')">✕</button>
-      </div>
-      
-      <div id="portalLockScreen" class="portal-lock-wrap">
-        <div style="font-size: 40px;">🛡️</div>
-        <p class="hud-label" style="margin-top: 10px;">Security Verification</p>
-        <input type="password" id="portalPinField" class="portal-pin-input" placeholder="••••••" maxlength="6" readonly inputmode="none">
-        
-        <button type="button" id="toggleKeypadBtn" class="close-btn" style="width: 100%; margin: 10px 0;" onclick="const k = document.getElementById('pinKeypadContainer'); k.style.display = k.style.display === 'block' ? 'none' : 'block';">⌨️ Toggle Keypad</button>
-        
-        <div id="pinKeypadContainer">
-          <div class="pin-keypad-grid">
-            <button type="button" class="pin-key-btn" onclick="addPin('1')">1</button>
-            <button type="button" class="pin-key-btn" onclick="addPin('2')">2</button>
-            <button type="button" class="pin-key-btn" onclick="addPin('3')">3</button>
-            <button type="button" class="pin-key-btn" onclick="addPin('4')">4</button>
-            <button type="button" class="pin-key-btn" onclick="addPin('5')">5</button>
-            <button type="button" class="pin-key-btn" onclick="addPin('6')">6</button>
-            <button type="button" class="pin-key-btn" onclick="addPin('7')">7</button>
-            <button type="button" class="pin-key-btn" onclick="addPin('8')">8</button>
-            <button type="button" class="pin-key-btn" onclick="addPin('9')">9</button>
-            <button type="button" class="pin-key-btn" onclick="document.getElementById('portalPinField').value = ''">C</button>
-            <button type="button" class="pin-key-btn" onclick="addPin('0')">0</button>
-            <button type="button" class="pin-key-btn" onclick="const p = document.getElementById('portalPinField'); p.value = p.value.slice(0, -1);">←</button>
-          </div>
+        <div>
+          <h2 class="modal-title">Hall of Fame & Championships</h2>
+          <p class="modal-sub">International and national tournament accomplishments.</p>
         </div>
-        
-        <button type="button" class="nav-anchor nav-anchor-cta" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;" onclick="unlockPortal()">Unlock Dashboard</button>
+        <button type="button" class="close-btn" onclick="closeDialog('modal-achievements')">ESC / CLOSE ✕</button>
       </div>
 
-      <!-- Container dynamically filled at runtime -->
-      <div id="dynamicWorkspace" style="display: none;"></div>
+      <div class="advait-portrait-card" style="margin-bottom: 2rem;">
+        <div class="achievement-img-wrap-916">
+          <img src="https://youngknightschess.com/wp-content/uploads/2023/10/advait-uk-article.png" alt="Advait Kumar - U-8 UKCC Champion Newspaper Article">
+        </div>
+        <div>
+          <span class="step-badge">🏆 International Champion</span>
+          <h3 class="modal-title" style="font-size: 2rem; margin-bottom: 0.5rem;">Advait Kumar — U-8 UKCC Champion</h3>
+          <p style="color: var(--maple-muted); line-height: 1.8;">One of our students, Advait Kumar, emerged victorious in the prestigious U-8 UKCC Championship through focused calculation drills under CM Badrinath.</p>
+        </div>
+      </div>
     </div>
   </dialog>
 
-  <!-- Step Dialog (Standard) -->
   <dialog id="modal-steps">
     <div class="modal-inner-container">
       <div class="modal-header-bar">
-        <h2 class="hero-title" style="font-size: 2rem; margin:0;">Step Workbooks</h2>
-        <button type="button" class="close-btn" onclick="closeDialog('modal-steps')">✕</button>
+        <div>
+          <h2 class="modal-title">Step-by-Step Training Pedagogy</h2>
+          <p class="modal-sub">Structured European Step Method curriculum.</p>
+        </div>
+        <button type="button" class="close-btn" onclick="closeDialog('modal-steps')">ESC / CLOSE ✕</button>
       </div>
-      <p>Structured European Step Method (Step 1 to Step 5+).</p>
+      <div class="pedagogy-grid">
+        <div class="pedagogy-box"><span class="step-badge">Step 1</span><h3 class="box-heading">Fundamentals</h3><p class="box-desc">Piece movement rules, coordinates, and 1-move mates.</p></div>
+        <div class="pedagogy-box"><span class="step-badge">Step 2</span><h3 class="box-heading">Tactics Core</h3><p class="box-desc">Forks, skewers, absolute and relative pins.</p></div>
+        <div class="pedagogy-box"><span class="step-badge">Step 3</span><h3 class="box-heading">Strategy</h3><p class="box-desc">Discovered attacks, pawn endings, and king positioning.</p></div>
+        <div class="pedagogy-box"><span class="step-badge">Step 4/5</span><h3 class="box-heading">Tournament Calculation</h3><p class="box-desc">Master repertoire and official FIDE rated prep.</p></div>
+      </div>
     </div>
   </dialog>
 
-  <!-- Schedule Dialog (Standard) -->
   <dialog id="modal-schedule">
     <div class="modal-inner-container">
       <div class="modal-header-bar">
-        <h2 class="hero-title" style="font-size: 2rem; margin:0;">Class Batches</h2>
-        <button type="button" class="close-btn" onclick="closeDialog('modal-schedule')">✕</button>
+        <div>
+          <h2 class="modal-title">Academy Batch Schedules</h2>
+          <p class="modal-sub">2 Weekend offline sessions per week.</p>
+        </div>
+        <button type="button" class="close-btn" onclick="closeDialog('modal-schedule')">ESC / CLOSE ✕</button>
       </div>
-      <p>Saturday: 6:30 PM – 8:00 PM | Sunday: 10:30 AM – 12:00 PM</p>
+      <div class="schedule-grid">
+        <div class="schedule-card"><span class="step-badge">Class 1</span><h3 class="box-heading">Saturday Evening</h3><div class="time-pill">Saturday: 6:30 PM – 8:00 PM</div></div>
+        <div class="schedule-card"><span class="step-badge">Class 2</span><h3 class="box-heading">Sunday Morning</h3><div class="time-pill">Sunday: 10:30 AM – 12:00 PM</div></div>
+      </div>
     </div>
   </dialog>
 
-  <footer style="padding: 2rem 0; text-align: center; border-top: 2px solid var(--wood-border);">
-    <p>© 2026 Young Knights Chess Academy. All rights reserved.</p>
-  </footer>
-
-  <script>
-    function addPin(num) {
-      const field = document.getElementById('portalPinField');
-      if (field.value.length < 6) field.value += num;
-    }
-
-    // Dynamic Runtime Gateway
-    async function unlockPortal() {
-      const enteredPin = document.getElementById('portalPinField').value;
-      
-      // Hash verification (SHA-256 for 300198) so raw PIN never appears in Ctrl+U
-      const encoder = new TextEncoder();
-      const data = encoder.encode(enteredPin);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-
-      // Hash for 300198
-      if (hashHex === "51fbba4488880e66eb1f3dc4d1db1239994c5e3d7ba1ef9d275fb14da7db5bbd") {
-        document.getElementById('portalLockScreen').style.display = 'none';
-        const workspace = document.getElementById('dynamicWorkspace');
-        workspace.style.display = 'block';
-        
-        // Dynamically inject CRM engine into DOM memory only after clearance
-        loadSecureCRMEngine(workspace);
-      } else {
-        alert('Invalid Security Clearance.');
-        document.getElementById('portalPinField').value = '';
-      }
-    }
-
-    function loadSecureCRMEngine(container) {
-      container.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
-          <input type="text" id="crmSearch" placeholder="Search students..." class="form-input-field" style="width: 70%;" oninput="filterRows()">
-          <button type="button" class="close-btn" onclick="refreshCRM()">Refresh Data</button>
+  <dialog id="modal-coach">
+    <div class="modal-inner-container">
+      <div class="modal-header-bar">
+        <div>
+          <h2 class="modal-title">Head Coach & Founder</h2>
+          <p class="modal-sub">Candidate Master & Certified FIDE Instructor.</p>
         </div>
-        <div style="overflow-x:auto;">
-          <table style="width:100%; border-collapse:collapse;" id="crmTable">
+        <button type="button" class="close-btn" onclick="closeDialog('modal-coach')">ESC / CLOSE ✕</button>
+      </div>
+      <div class="coach-layout-full">
+        <div class="coach-image-frame"><img src="https://uploads.onecompiler.io/44mga3aud/44z3hzrhe/Chess-Coach-Badrinath.jpg" alt="Coach Badrinath"></div>
+        <div>
+          <h3 class="modal-title" style="font-size: 2rem;">Badrinath S.</h3>
+          <p style="color: var(--gold-bright); font-weight: 700; margin-bottom: 1rem;">Candidate Master (CM) & FIDE Instructor (FI)</p>
+          <p style="color: var(--maple-muted); line-height: 1.7;">Over 15 years tournament experience, winner of 1st Jaipur Classical FIDE Open (8/9) and Sitges Spain 2025.</p>
+          <a href="https://lichess.org/@/Battery_bad" target="_blank" class="btn btn-wood" style="margin-top: 1.5rem;">♟ Lichess ID: Battery_bad ↗</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="modal-lichess">
+    <div class="modal-inner-container">
+      <div class="modal-header-bar">
+        <div>
+          <h2 class="modal-title">Monthly Lichess Arena</h2>
+          <p class="modal-sub">Online rated competition.</p>
+        </div>
+        <button type="button" class="close-btn" onclick="closeDialog('modal-lichess')">ESC / CLOSE ✕</button>
+      </div>
+      <div class="pedagogy-box"><span class="step-badge">Arena Rules</span><h3 class="box-heading">Once / Month Sunday Battle</h3><p class="box-desc">Active strictly once a month on any selected Sunday at 6:00 PM IST with post-game reviews.</p></div>
+    </div>
+  </dialog>
+
+  <dialog id="modal-contact">
+    <div class="modal-inner-container">
+      <div class="modal-header-bar">
+        <div>
+          <h2 class="modal-title">Academy Contact Center</h2>
+          <p class="modal-sub">Call, WhatsApp, or navigate to our Gorimedu venue.</p>
+        </div>
+        <button type="button" class="close-btn" onclick="closeDialog('modal-contact')">ESC / CLOSE ✕</button>
+      </div>
+      <div class="keypad-contact-grid">
+        <a href="tel:+919488083418" class="keypad-button-card"><div style="font-size: 50px;">📞</div><span class="box-heading" style="font-size: 1.1rem;">Call Coach</span><span>+91 94880 83418</span></a>
+        <a href="https://wa.me/919488083418" target="_blank" class="keypad-button-card"><div style="font-size: 50px;">💬</div><span class="box-heading" style="font-size: 1.1rem;">WhatsApp</span><span>Instant Chat</span></a>
+        <a href="https://maps.app.goo.gl/ka6on2vaQGAR6hGX7" target="_blank" class="keypad-button-card"><img src="https://uploads.onecompiler.io/44mga3aud/44z3hzrhe/maps-logo.png" class="keypad-img-icon" alt="Maps"><span class="box-heading" style="font-size: 1.1rem;">Gorimedu</span><span>Google Maps ↗</span></a>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Coach CRM Dashboard -->
+  <dialog id="modal-coach-portal" class="screenshot-protected" aria-labelledby="title-coach-portal">
+    <div class="modal-inner-container">
+      <div class="modal-header-bar">
+        <div>
+          <h2 id="title-coach-portal" class="modal-title">Coach CRM Portal</h2>
+          <p class="modal-sub">Student inquiries, lead pipeline & database management.</p>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <a href="https://docs.google.com/spreadsheets/d/1vx3QrAxJz_azFb62BULVN3Gt0SFLk0_PmPEi_Lc3Niw/edit" target="_blank" rel="noopener noreferrer" class="btn btn-wood" style="padding: 6px 14px; font-size: 0.8rem;">
+            📊 Open Google Sheet ↗
+          </a>
+          <button type="button" class="close-btn" onclick="closeDialog('modal-coach-portal')">ESC / CLOSE ✕</button>
+        </div>
+      </div>
+
+      <!-- PIN Auth Screen -->
+      <div id="portalLockScreen" class="portal-lock-wrap">
+        <div style="font-size: 44px; margin-bottom: 0.5rem;">🛡️</div>
+        <h3 class="box-heading" style="font-size: 1.4rem;">Coach Clearance</h3>
+        <p style="color: var(--maple-muted); font-size: 0.85rem;">Type or tap your 6-digit PIN. Auto-proceeds upon match.</p>
+        
+        <input type="password" id="portalPinField" class="portal-pin-input" placeholder="••••••" maxlength="6" autocomplete="off" oninput="handlePinAutoCheck(this.value)">
+
+        <button type="button" id="toggleKeypadBtn" onclick="const k=document.getElementById('pinKeypadContainer'); k.style.display=(k.style.display==='block'?'none':'block')" class="action-pill-btn" style="width: 100%; margin-bottom: 0.8rem;">
+          ⌨️ Toggle Touch Keypad
+        </button>
+
+        <div id="pinKeypadContainer">
+          <div class="pin-keypad-grid">
+            <button type="button" class="pin-key-btn" onclick="pressKeypad('1')">1</button>
+            <button type="button" class="pin-key-btn" onclick="pressKeypad('2')">2</button>
+            <button type="button" class="pin-key-btn" onclick="pressKeypad('3')">3</button>
+            <button type="button" class="pin-key-btn" onclick="pressKeypad('4')">4</button>
+            <button type="button" class="pin-key-btn" onclick="pressKeypad('5')">5</button>
+            <button type="button" class="pin-key-btn" onclick="pressKeypad('6')">6</button>
+            <button type="button" class="pin-key-btn" onclick="pressKeypad('7')">7</button>
+            <button type="button" class="pin-key-btn" onclick="pressKeypad('8')">8</button>
+            <button type="button" class="pin-key-btn" onclick="pressKeypad('9')">9</button>
+            <button type="button" class="pin-key-btn action-key" onclick="document.getElementById('portalPinField').value=''">CLR</button>
+            <button type="button" class="pin-key-btn" onclick="pressKeypad('0')">0</button>
+            <button type="button" class="pin-key-btn action-key" onclick="pressKeypadDelete()">DEL</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CRM Workspace -->
+      <div id="portalMainWorkspace" style="display: none;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <button type="button" onclick="openDirectLeadModal()" class="btn btn-gold" style="padding: 8px 18px;">
+              <span>➕ Add New Lead</span>
+            </button>
+            <a href="https://docs.google.com/spreadsheets/d/1vx3QrAxJz_azFb62BULVN3Gt0SFLk0_PmPEi_Lc3Niw/edit" target="_blank" rel="noopener noreferrer" class="btn btn-wood" style="padding: 8px 16px;">
+              <span>📈 View Live Sheet ↗</span>
+            </a>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <button type="button" onclick="fetchCrmLeads()" class="btn btn-wood" style="padding: 8px 16px;">
+              <span>🔄 Sync Now</span>
+            </button>
+            <span id="syncIndicator" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--green-live);">● Live Polling Active</span>
+          </div>
+        </div>
+
+        <div class="crm-metric-grid">
+          <div class="crm-metric-box"><span class="hud-label">Total Enquiries</span><div id="crmTotalCount" class="hud-val">0</div></div>
+          <div class="crm-metric-box"><span class="hud-label">Active Leads</span><div id="crmLeadCount" class="hud-val" style="color: var(--gold-bright);">0</div></div>
+          <div class="crm-metric-box"><span class="hud-label">Trials Scheduled</span><div id="crmTrialCount" class="hud-val" style="color: var(--blue-trial);">0</div></div>
+          <div class="crm-metric-box"><span class="hud-label">Enrolled Students</span><div id="crmEnrolledCount" class="hud-val" style="color: var(--green-live);">0</div></div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+          <input type="text" id="crmSearchInput" class="form-input-field" style="flex: 1; min-width: 240px;" placeholder="Search student name, phone, step..." oninput="filterCrmTable()">
+          <select id="crmStatusFilter" class="form-input-field" style="width: 180px;" onchange="filterCrmTable()">
+            <option value="All">All Statuses</option>
+            <option value="Lead">Lead</option>
+            <option value="Trial Scheduled">Trial Scheduled</option>
+            <option value="Enrolled">Enrolled</option>
+            <option value="Archived">Archived</option>
+          </select>
+        </div>
+
+        <div class="crm-table-container">
+          <table class="crm-table">
             <thead>
-              <tr style="border-bottom:2px solid var(--wood-border); text-align:left; color:var(--gold-bright);">
-                <th style="padding:10px;">Date</th>
+              <tr>
+                <th style="width: 40px; text-align: center;">
+                  <input type="checkbox" id="selectAllCheckbox" class="crm-row-check" onchange="toggleSelectAll(this)">
+                </th>
+                <th>Date (dd-mm-yyyy)</th>
                 <th>Student</th>
                 <th>Age</th>
                 <th>Step</th>
                 <th>Platform</th>
                 <th>Phone</th>
                 <th>Status</th>
+                <th>Notes</th>
+                <th style="text-align: right;">Actions</th>
               </tr>
             </thead>
-            <tbody id="crmBody">
-              <tr><td colspan="7" style="padding:20px; text-align:center;">Loading secure data...</td></tr>
+            <tbody id="crmTableBody">
+              <tr><td colspan="10" style="text-align: center; padding: 2.5rem;">Loading enquiries database...</td></tr>
             </tbody>
           </table>
         </div>
-      `;
-      window.refreshCRM();
+
+      </div>
+
+    </div>
+
+    <!-- Bulk Delete Toolbar -->
+    <div id="bulkDeleteBar" class="bulk-delete-bar">
+      <span style="font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; color: #fff;">
+        <span id="bulkSelectedCount">0</span> selected
+      </span>
+      <button type="button" onclick="executeBulkDelete()" class="btn btn-danger" style="padding: 6px 16px; font-size: 0.85rem; border-radius: 999px;">
+        🗑️ Delete Selected
+      </button>
+      <button type="button" onclick="clearBulkSelection()" class="action-pill-btn" style="padding: 6px 12px; border-radius: 999px;">
+        Cancel
+      </button>
+    </div>
+  </dialog>
+
+  <!-- Direct Lead Entry Modal -->
+  <dialog id="modal-direct-lead">
+    <div class="modal-inner-container" style="max-width: 600px;">
+      <div class="modal-header-bar">
+        <div>
+          <h2 class="modal-title" style="font-size: 1.8rem;">Add Inquiry Directly</h2>
+          <p class="modal-sub">Direct insertion to Google Sheet database.</p>
+        </div>
+        <button type="button" class="close-btn" onclick="closeDialog('modal-direct-lead')">✕</button>
+      </div>
+
+      <form onsubmit="submitDirectCrmLead(event)" class="pedagogy-grid" style="grid-template-columns: 1fr; background: var(--wood-walnut); padding: 1.5rem; border-radius: var(--radius-md); border: 1.5px solid var(--wood-border);">
+        <div>
+          <label class="hud-label">Student Name *</label>
+          <input type="text" id="dir_name" class="form-input-field" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label class="hud-label">Age *</label>
+            <input type="number" id="dir_age" class="form-input-field" min="4" max="80" required>
+          </div>
+          <div>
+            <label class="hud-label">Step / Level *</label>
+            <select id="dir_step" class="form-input-field" required>
+              <option value="Let the coach decide">Let the coach decide</option>
+              <option value="Step 1">Step 1</option>
+              <option value="Step 2">Step 2</option>
+              <option value="Step 3">Step 3</option>
+              <option value="Step 4/5">Step 4/5</option>
+              <option value="FIDE Rated">FIDE Rated</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="hud-label">Platform / Mode *</label>
+          <select id="dir_platform" class="form-input-field" required>
+            <option value="Offline (Gorimedu Center)">Offline (Gorimedu Center)</option>
+            <option value="Google Meet">Google Meet</option>
+            <option value="Zoom">Zoom</option>
+          </select>
+        </div>
+        <div>
+          <label class="hud-label">Phone / WhatsApp *</label>
+          <input type="tel" id="dir_phone" class="form-input-field" required>
+        </div>
+        <div>
+          <label class="hud-label">Initial Status</label>
+          <select id="dir_status" class="form-input-field">
+            <option value="Lead" selected>Lead</option>
+            <option value="Trial Scheduled">Trial Scheduled</option>
+            <option value="Enrolled">Enrolled</option>
+          </select>
+        </div>
+        <div>
+          <label class="hud-label">Notes</label>
+          <textarea id="dir_notes" class="form-input-field" style="height: 60px;"></textarea>
+        </div>
+        <div style="margin-top: 0.5rem;">
+          <button type="submit" id="dir_submit_btn" class="btn btn-gold" style="width: 100%; justify-content: center;">
+            <span>💾 Save to Spreadsheet</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Edit Inquiry Modal -->
+  <dialog id="modal-edit-lead">
+    <div class="modal-inner-container" style="max-width: 620px;">
+      <div class="modal-header-bar">
+        <div>
+          <h2 class="modal-title" style="font-size: 1.8rem;">Edit Inquiry</h2>
+          <p class="modal-sub">Update student records directly in the spreadsheet.</p>
+        </div>
+        <button type="button" class="close-btn" onclick="closeDialog('modal-edit-lead')">✕</button>
+      </div>
+
+      <form onsubmit="saveEditedLead(event)" class="pedagogy-grid" style="grid-template-columns: 1fr; background: var(--wood-walnut); padding: 1.8rem; border-radius: var(--radius-md); border: 1.5px solid var(--wood-border);">
+        <input type="hidden" id="edit_row_number">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label class="hud-label">Date (dd-mm-yyyy) *</label>
+            <input type="text" id="edit_timestamp" class="form-input-field" placeholder="dd-mm-yyyy" required>
+          </div>
+          <div>
+            <label class="hud-label">Student Age *</label>
+            <input type="number" id="edit_age" class="form-input-field" min="4" max="80" required>
+          </div>
+        </div>
+
+        <div>
+          <label class="hud-label">Student Name *</label>
+          <input type="text" id="edit_name" class="form-input-field" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label class="hud-label">Step / Level *</label>
+            <select id="edit_step" class="form-input-field" required>
+              <option value="Let the coach decide">Let the coach decide</option>
+              <option value="I don't know (Evaluate child)">I don't know (Evaluate child)</option>
+              <option value="Absolute Beginner">Absolute Beginner</option>
+              <option value="Step 1">Step 1</option>
+              <option value="Step 2">Step 2</option>
+              <option value="Step 3">Step 3</option>
+              <option value="Step 4/5">Step 4/5</option>
+              <option value="FIDE Rated">FIDE Rated</option>
+            </select>
+          </div>
+          <div>
+            <label class="hud-label">Platform / Mode *</label>
+            <select id="edit_platform" class="form-input-field" required>
+              <option value="Offline (Gorimedu Center)">Offline (Gorimedu Center)</option>
+              <option value="Google Meet">Google Meet</option>
+              <option value="Zoom">Zoom</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label class="hud-label">Phone / WhatsApp *</label>
+            <input type="tel" id="edit_phone" class="form-input-field" required>
+          </div>
+          <div>
+            <label class="hud-label">Status *</label>
+            <select id="edit_status" class="form-input-field" required>
+              <option value="Lead">Lead</option>
+              <option value="Trial Scheduled">Trial Scheduled</option>
+              <option value="Enrolled">Enrolled</option>
+              <option value="Archived">Archived</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="hud-label">Notes</label>
+          <textarea id="edit_notes" class="form-input-field" style="height: 75px;"></textarea>
+        </div>
+
+        <div style="margin-top: 0.5rem;">
+          <button type="submit" id="edit_submit_btn" class="btn btn-gold" style="width: 100%; justify-content: center;">
+            <span>💾 Save Changes to Google Sheet</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <footer>
+    <div class="container">
+      <p style="font-family: var(--font-display); color: var(--maple-light); font-weight: 700; margin-bottom: 2px;">Young Knights Chess Academy</p>
+      <p>© 2026 Young Knights Chess Academy. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxGaoU2qdIeC_gNPr3pfNZIpUY-t4zw_8bnNks50peT5_vgnVE0MsDOflnwyVDja9LP1g/exec";
+    const COACH_ACCESS_PIN = "300198";
+    
+    let crmLeadsData = [];
+    let selectedRowNumbers = new Set();
+    let crmPollingTimer = null;
+
+    window.unlockPortalDirectly = function() {
+      document.getElementById('portalLockScreen').style.display = 'none';
+      document.getElementById('portalMainWorkspace').style.display = 'block';
+      fetchCrmLeads();
+    };
+
+    function handlePinAutoCheck(val) {
+      if (val.length === 6) {
+        if (val === COACH_ACCESS_PIN) {
+          document.getElementById('portalLockScreen').style.display = 'none';
+          document.getElementById('portalMainWorkspace').style.display = 'block';
+          fetchCrmLeads();
+        } else {
+          alert("Incorrect PIN code.");
+          document.getElementById('portalPinField').value = '';
+        }
+      }
     }
 
-    // Endpoint obfuscation via runtime assembly
-    const _p = ["https://script.google.com/macros/s/", "AKfycbw8DG6RwpuCIInrW0t9Z4G5veSOZ2oh-buZ17eujTRrkcjV8Q4XJCKx-jCmhRIYW88xvg", "/exec"];
-    const _target = () => _p.join('');
+    function pressKeypad(digit) {
+      const p = document.getElementById('portalPinField');
+      if (p.value.length < 6) {
+        p.value += digit;
+        handlePinAutoCheck(p.value);
+      }
+    }
 
-    window.refreshCRM = async function() {
+    function pressKeypadDelete() {
+      const p = document.getElementById('portalPinField');
+      p.value = p.value.slice(0, -1);
+    }
+
+    window.startCrmPolling = function() {
+      if (crmPollingTimer) clearInterval(crmPollingTimer);
+      crmPollingTimer = setInterval(() => {
+        const portal = document.getElementById('modal-coach-portal');
+        if (portal && portal.open && document.getElementById('portalMainWorkspace').style.display === 'block') {
+          fetchCrmLeads(true);
+        }
+      }, 12000);
+    };
+
+    window.stopCrmPolling = function() {
+      if (crmPollingTimer) clearInterval(crmPollingTimer);
+    };
+
+    function formatNormalizedDate(raw) {
+      if (!raw) return "";
+      var str = String(raw).trim();
+      if (str.indexOf("T") > -1) {
+        var parts = str.split("T")[0].split("-");
+        if (parts.length === 3) return parts[2] + "-" + parts[1] + "-" + parts[0];
+      }
+      return str.split(" ")[0];
+    }
+
+    async function fetchCrmLeads(isSilent = false) {
+      if (!isSilent) {
+        document.getElementById('syncIndicator').textContent = "🔄 Fetching updates...";
+      }
       try {
-        const res = await fetch(_target());
-        const data = await res.json();
-        const tbody = document.getElementById('crmBody');
-        tbody.innerHTML = data.slice().reverse().map(r => `
-          <tr style="border-bottom:1px solid var(--wood-border);">
-            <td style="padding:10px;">${r.timestamp}</td>
-            <td><strong>${r.name}</strong></td>
-            <td>${r.age}</td>
-            <td style="color:var(--gold-bright);">${r.step}</td>
-            <td>${r.platform}</td>
-            <td><a href="tel:${r.phone}" style="color:var(--maple-light); text-decoration:none;">📞 ${r.phone}</a></td>
-            <td>${r.status}</td>
-          </tr>
-        `).join('');
+        const res = await fetch(GOOGLE_SCRIPT_URL);
+        const rawData = await res.json();
+        // Ignore ghost/empty rows
+        crmLeadsData = rawData.filter(d => d.name && d.name !== "N/A").map(d => ({
+          ...d,
+          timestamp: formatNormalizedDate(d.timestamp)
+        }));
+        renderCrmTable(crmLeadsData);
+        updateCrmMetrics(crmLeadsData);
+        document.getElementById('syncIndicator').textContent = "● Synced with Google Sheet";
+      } catch (err) {
+        console.error("CRM Sync Error:", err);
+        document.getElementById('syncIndicator').textContent = "⚠️ Sync Error";
+      }
+    }
+
+    function renderCrmTable(data) {
+      const tbody = document.getElementById('crmTableBody');
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 2rem;">No student records found in Google Sheet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = data.slice().reverse().map(lead => {
+        const isChecked = selectedRowNumbers.has(lead.rowNumber) ? 'checked' : '';
+        return `
+        <tr id="row_lead_${lead.rowNumber}">
+          <td style="text-align: center;">
+            <input type="checkbox" class="crm-row-check" value="${lead.rowNumber}" ${isChecked} onchange="toggleLeadSelection(${lead.rowNumber}, this.checked)">
+          </td>
+          <td style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--maple-muted);">${lead.timestamp}</td>
+          <td><strong>${lead.name}</strong></td>
+          <td>${lead.age}</td>
+          <td><span style="color: var(--gold-bright); font-weight: 700;">${lead.step}</span></td>
+          <td>${lead.platform}</td>
+          <td><a href="tel:${lead.phone}" class="action-pill-btn">📞 ${lead.phone}</a></td>
+          <td>
+            <select onchange="updateCrmStatus(${lead.rowNumber}, this.value)" class="form-input-field" style="padding: 4px 8px; font-size: 0.8rem; width: auto;">
+              <option value="Lead" ${lead.status === 'Lead' ? 'selected' : ''}>Lead</option>
+              <option value="Trial Scheduled" ${lead.status === 'Trial Scheduled' ? 'selected' : ''}>Trial Scheduled</option>
+              <option value="Enrolled" ${lead.status === 'Enrolled' ? 'selected' : ''}>Enrolled</option>
+              <option value="Archived" ${lead.status === 'Archived' ? 'selected' : ''}>Archived</option>
+            </select>
+          </td>
+          <td style="color: var(--maple-muted); font-size: 0.85rem; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            ${lead.notes || '—'}
+          </td>
+          <td style="text-align: right; position: relative;">
+            <button type="button" class="dots-menu-btn" onclick="toggleRowMenu(${lead.rowNumber}, event)" title="Options">⋮</button>
+            <div id="row_popover_${lead.rowNumber}" class="row-action-popover">
+              <button type="button" onclick="openEditInquiryModal(${lead.rowNumber})">✏️ Edit Inquiry</button>
+              <button type="button" style="color: var(--red-delete);" onclick="deleteSingleLead(${lead.rowNumber})">🗑️ Delete Lead</button>
+            </div>
+          </td>
+        </tr>
+      `}).join('');
+
+      updateBulkBarUI();
+    }
+
+    function updateCrmMetrics(data) {
+      document.getElementById('crmTotalCount').textContent = data.length;
+      document.getElementById('crmLeadCount').textContent = data.filter(d => (d.status || 'Lead') === 'Lead').length;
+      document.getElementById('crmTrialCount').textContent = data.filter(d => d.status === 'Trial Scheduled').length;
+      document.getElementById('crmEnrolledCount').textContent = data.filter(d => d.status === 'Enrolled').length;
+    }
+
+    function filterCrmTable() {
+      const q = document.getElementById('crmSearchInput').value.toLowerCase();
+      const s = document.getElementById('crmStatusFilter').value;
+
+      const filtered = crmLeadsData.filter(d => {
+        const matchQ = String(d.name).toLowerCase().includes(q) || String(d.phone).includes(q) || String(d.step).toLowerCase().includes(q);
+        const matchS = (s === 'All') || ((d.status || 'Lead') === s);
+        return matchQ && matchS;
+      });
+
+      renderCrmTable(filtered);
+    }
+
+    function toggleRowMenu(rowNumber, e) {
+      e.stopPropagation();
+      document.querySelectorAll('.row-action-popover').forEach(p => p.classList.remove('open'));
+      const popover = document.getElementById(`row_popover_${rowNumber}`);
+      if (popover) popover.classList.toggle('open');
+    }
+
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.row-action-popover').forEach(p => p.classList.remove('open'));
+    });
+
+    // Edit Modal Trigger
+    window.openEditInquiryModal = function(rowNumber) {
+      document.querySelectorAll('.row-action-popover').forEach(p => p.classList.remove('open'));
+      const lead = crmLeadsData.find(d => d.rowNumber === rowNumber);
+      if (!lead) return;
+
+      document.getElementById('edit_row_number').value = lead.rowNumber;
+      document.getElementById('edit_timestamp').value = lead.timestamp || "";
+      document.getElementById('edit_name').value = lead.name || "";
+      document.getElementById('edit_age').value = lead.age || "";
+      document.getElementById('edit_step').value = lead.step || "Step 1";
+      document.getElementById('edit_platform').value = lead.platform || "Offline (Gorimedu Center)";
+      document.getElementById('edit_phone').value = lead.phone || "";
+      document.getElementById('edit_status').value = lead.status || "Lead";
+      document.getElementById('edit_notes').value = lead.notes || "";
+
+      openDialog('modal-edit-lead');
+    };
+
+    async function saveEditedLead(e) {
+      e.preventDefault();
+      const btn = document.getElementById('edit_submit_btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span>Saving to Google Sheet...</span>';
+
+      const rowNumber = parseInt(document.getElementById('edit_row_number').value);
+      const payload = {
+        action: "edit_lead",
+        rowNumber: rowNumber,
+        timestamp: document.getElementById('edit_timestamp').value.trim(),
+        name: document.getElementById('edit_name').value.trim(),
+        age: document.getElementById('edit_age').value.trim(),
+        step: document.getElementById('edit_step').value,
+        platform: document.getElementById('edit_platform').value,
+        phone: document.getElementById('edit_phone').value.trim(),
+        status: document.getElementById('edit_status').value,
+        notes: document.getElementById('edit_notes').value.trim()
+      };
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.error("Edit save error:", err);
+      }
+
+      btn.innerHTML = '<span>✅ Saved!</span>';
+      setTimeout(() => {
+        closeDialog('modal-edit-lead');
+        btn.disabled = false;
+        btn.innerHTML = '<span>💾 Save Changes to Google Sheet</span>';
+        fetchCrmLeads();
+      }, 1000);
+    }
+
+    // Delete Single Lead
+    async function deleteSingleLead(rowNumber) {
+      if (confirm("Permanently delete this inquiry from your Google Sheet?")) {
+        try {
+          await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "delete_leads", rowNumbers: [rowNumber] })
+          });
+          selectedRowNumbers.delete(rowNumber);
+          fetchCrmLeads();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+
+    // Bulk Delete
+    function toggleLeadSelection(rowNumber, isChecked) {
+      if (isChecked) selectedRowNumbers.add(rowNumber);
+      else selectedRowNumbers.delete(rowNumber);
+      updateBulkBarUI();
+    }
+
+    function toggleSelectAll(masterBox) {
+      const checks = document.querySelectorAll('.crm-row-check');
+      checks.forEach(c => {
+        if (c.id !== 'selectAllCheckbox') {
+          c.checked = masterBox.checked;
+          const rNum = parseInt(c.value);
+          if (masterBox.checked) selectedRowNumbers.add(rNum);
+          else selectedRowNumbers.delete(rNum);
+        }
+      });
+      updateBulkBarUI();
+    }
+
+    function updateBulkBarUI() {
+      const bar = document.getElementById('bulkDeleteBar');
+      const countEl = document.getElementById('bulkSelectedCount');
+      countEl.textContent = selectedRowNumbers.size;
+
+      if (selectedRowNumbers.size > 0) {
+        bar.classList.add('active');
+      } else {
+        bar.classList.remove('active');
+        const master = document.getElementById('selectAllCheckbox');
+        if (master) master.checked = false;
+      }
+    }
+
+    function clearBulkSelection() {
+      selectedRowNumbers.clear();
+      document.querySelectorAll('.crm-row-check').forEach(c => c.checked = false);
+      updateBulkBarUI();
+    }
+
+    async function executeBulkDelete() {
+      if (selectedRowNumbers.size === 0) return;
+      if (confirm(`Permanently delete ${selectedRowNumbers.size} inquiries from your Google Sheet?`)) {
+        try {
+          const rowsToDelete = Array.from(selectedRowNumbers);
+          await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "delete_leads", rowNumbers: rowsToDelete })
+          });
+          clearBulkSelection();
+          fetchCrmLeads();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+
+    async function updateCrmStatus(rowNumber, newStatus) {
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "update_status", rowNumber: rowNumber, status: newStatus })
+        });
+        const lead = crmLeadsData.find(d => d.rowNumber === rowNumber);
+        if (lead) lead.status = newStatus;
+        updateCrmMetrics(crmLeadsData);
       } catch (err) {
         console.error(err);
       }
+    }
+
+    window.openDirectLeadModal = function() {
+      openDialog('modal-direct-lead');
     };
 
-    async function handlePublicSubmission(e) {
+    async function submitDirectCrmLead(e) {
       e.preventDefault();
-      const btn = document.getElementById('subBtn');
-      btn.textContent = "Saving...";
-      btn.style.pointerEvents = "none";
+      const btn = document.getElementById('dir_submit_btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span>Saving to Google Sheet...</span>';
 
       const payload = {
+        action: "add_lead",
+        name: document.getElementById('dir_name').value.trim(),
+        age: document.getElementById('dir_age').value.trim(),
+        step: document.getElementById('dir_step').value,
+        platform: document.getElementById('dir_platform').value,
+        phone: document.getElementById('dir_phone').value.trim(),
+        status: document.getElementById('dir_status').value,
+        notes: document.getElementById('dir_notes').value.trim() || 'Direct CRM Entry'
+      };
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.error(err);
+      }
+
+      btn.innerHTML = '<span>✅ Saved!</span>';
+      setTimeout(() => {
+        closeDialog('modal-direct-lead');
+        document.getElementById('dir_name').value = '';
+        document.getElementById('dir_age').value = '';
+        document.getElementById('dir_phone').value = '';
+        document.getElementById('dir_notes').value = '';
+        btn.disabled = false;
+        btn.innerHTML = '<span>💾 Save to Spreadsheet</span>';
+        fetchCrmLeads();
+      }, 1000);
+    }
+
+    async function submitPublicEnquiry(e) {
+      e.preventDefault();
+      const btn = document.getElementById('eq_btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳ Saving to Academy Database...</span>';
+
+      const payload = {
+        action: "new_enquiry",
         name: document.getElementById('eq_name').value.trim(),
         age: document.getElementById('eq_age').value.trim(),
         step: document.getElementById('eq_step').value,
@@ -474,23 +1328,23 @@
       };
 
       try {
-        await fetch(_target(), {
+        await fetch(GOOGLE_SCRIPT_URL, {
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
       } catch (err) {
-        console.error(err);
+        console.error("Submission error:", err);
       }
 
-      btn.textContent = "Enquiry Submitted!";
+      btn.innerHTML = '<span>✅ Enquiry Received! Coach will reach out shortly.</span>';
       setTimeout(() => {
         closeDialog('modal-enquiry');
         document.getElementById('onlineEnquiryForm').reset();
-        btn.textContent = "Submit Enquiry";
-        btn.style.pointerEvents = "auto";
-      }, 1500);
+        btn.disabled = false;
+        btn.innerHTML = '<span>⚡ Submit Enquiry to Academy</span>';
+      }, 1800);
     }
   </script>
 </body>

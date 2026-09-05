@@ -32,6 +32,7 @@
       --gold-glow: rgba(245, 158, 11, 0.45);
       
       --green-live: #22c55e;
+      --green-wa: #25d366;
       --blue-trial: #38bdf8;
       --red-delete: #ef4444;
       
@@ -69,6 +70,7 @@
 
     .container { width: min(1200px, 92%); margin: 0 auto; }
 
+    /* Video Splash Intro */
     #splash-intro {
       position: fixed; inset: 0; width: 100vw; height: 100vh;
       background-color: #000; z-index: 999999;
@@ -88,6 +90,7 @@
     }
     .skip-intro-btn:hover { background: var(--gold-bright); color: #000; transform: scale(1.05); }
 
+    /* Keyframes */
     @keyframes live-pulse { 0% { transform: scale(1); opacity: 1; } 75%, 100% { transform: scale(2.5); opacity: 0; } }
     @keyframes shimmer-sweep { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
     @keyframes emoji-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
@@ -99,6 +102,7 @@
     @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
     .icon-anim { display: inline-block; transition: transform 0.25s var(--ease-turbo); }
 
+    /* Header & Nav */
     header.site-header {
       position: sticky; top: 0; z-index: 100;
       background: rgba(18, 9, 5, 0.96); backdrop-filter: blur(16px);
@@ -131,6 +135,7 @@
     .nav-anchor-cta { color: var(--gold-bright); border-color: var(--gold-main); background: rgba(245, 158, 11, 0.1); }
     .nav-anchor-cta:hover { background: var(--gold-main); color: var(--wood-void); }
 
+    /* Mobile Drawer */
     .mobile-nav-backdrop {
       position: fixed; inset: 0; background: rgba(10, 5, 2, 0.85); backdrop-filter: blur(8px);
       z-index: 1050; opacity: 0; visibility: hidden; transition: all 0.3s ease;
@@ -149,6 +154,7 @@
     .mobile-menu-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
     .mobile-nav-item .nav-anchor { width: 100%; font-size: 1rem; padding: 12px 14px; background: rgba(45, 24, 13, 0.55); border: 1px solid var(--wood-border); border-radius: var(--radius-md); justify-content: flex-start; }
 
+    /* Hero */
     .hero { position: relative; padding: 5rem 0 6rem; border-bottom: 2px solid var(--wood-border); }
     .hero-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 3.5rem; align-items: center; }
     .status-badge {
@@ -158,6 +164,7 @@
     .hero-title { font-family: var(--font-display); font-size: clamp(2.4rem, 4.8vw, 4rem); font-weight: 900; line-height: 1.15; margin-bottom: 1.2rem; }
     .hero-desc { color: var(--maple-muted); font-size: 1.15rem; max-width: 640px; }
 
+    /* HUD Matrix */
     .hud-card {
       background: linear-gradient(145deg, var(--wood-card) 0%, var(--wood-walnut) 100%);
       border: 2px solid var(--wood-border); border-radius: var(--radius-lg); padding: 1.8rem;
@@ -172,6 +179,7 @@
     .hud-val { font-family: var(--font-display); font-size: 1.45rem; font-weight: 900; color: var(--gold-bright); }
     .countdown-box { grid-column: 1 / -1; background: rgba(245, 158, 11, 0.12); border: 1px dashed var(--gold-main); border-radius: var(--radius-sm); padding: 10px 14px; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.85rem; color: var(--gold-bright); }
 
+    /* Dialog Engine */
     dialog {
       width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; margin: 0; padding: 0; border: none;
       background: linear-gradient(180deg, rgba(14, 7, 4, 0.97) 0%, rgba(22, 12, 7, 0.99) 100%),
@@ -246,6 +254,21 @@
       padding: 12px; border-radius: var(--radius-md); width: 100%; margin: 1.2rem 0 1rem;
     }
 
+    /* Redesigned Tactile Keypad Toggle Button */
+    .keypad-toggle-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 12px 16px; margin-bottom: 1rem;
+      background: linear-gradient(145deg, var(--wood-card) 0%, var(--wood-dark) 100%);
+      border: 1.5px solid var(--gold-main); border-radius: var(--radius-md);
+      color: var(--gold-bright); font-family: var(--font-mono); font-size: 0.88rem; font-weight: 700;
+      cursor: pointer; transition: all 0.2s var(--ease-turbo);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    }
+    .keypad-toggle-btn:hover {
+      background: var(--gold-main); color: #160c07; transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--gold-glow);
+    }
+
     .pin-keypad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 1rem 0; }
     .pin-key-btn { background: var(--wood-dark); border: 1.5px solid var(--wood-border); border-radius: var(--radius-md); color: var(--maple-light); font-family: var(--font-mono); font-size: 1.4rem; padding: 14px 0; cursor: pointer; }
     .pin-key-btn:active { background: var(--gold-main); color: #000; }
@@ -260,6 +283,47 @@
     .crm-table th { background: var(--wood-dark); font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; color: var(--gold-bright); padding: 14px 16px; border-bottom: 2px solid var(--wood-border); }
     .crm-table td { padding: 14px 16px; border-bottom: 1px solid var(--wood-border); font-size: 0.9rem; color: var(--maple-light); }
     .crm-table tr:hover td { background: var(--wood-card); }
+
+    /* High-Contrast Phone Number Badge & WhatsApp Trigger */
+    .contact-action-cell {
+      display: inline-flex; align-items: center; gap: 6px; flex-wrap: nowrap;
+    }
+    .phone-badge-wrap {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fef3c7;
+      border: 1.5px solid #d97706; border-radius: var(--radius-sm);
+      padding: 5px 10px; text-decoration: none !important;
+      transition: all 0.2s ease;
+    }
+    .phone-badge-wrap:hover {
+      background: #fde68a; transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+    }
+    .phone-badge-text {
+      font-family: var(--font-mono); font-size: 0.85rem; font-weight: 800;
+      color: #3d1a04 !important;
+      text-decoration: none !important;
+    }
+    .wa-direct-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: rgba(37, 211, 102, 0.15); border: 1.5px solid var(--green-wa);
+      border-radius: var(--radius-sm); width: 32px; height: 32px;
+      color: var(--green-wa); text-decoration: none !important; font-size: 1.1rem;
+      transition: all 0.2s ease;
+    }
+    .wa-direct-btn:hover {
+      background: var(--green-wa); color: #000; transform: translateY(-1px);
+    }
+    .repeat-lead-badge {
+      display: inline-block; font-family: var(--font-mono); font-size: 0.68rem;
+      background: rgba(245, 158, 11, 0.25); border: 1px solid var(--gold-main);
+      color: var(--gold-bright); padding: 1px 6px; border-radius: 4px; margin-left: 4px;
+    }
+
+    a[href^="tel:"], a[href^="tel:"]:visited, a[href^="tel:"]:hover, a[href^="tel:"]:active {
+      color: inherit !important;
+      text-decoration: none !important;
+    }
 
     .badge-crm { display: inline-block; padding: 4px 10px; border-radius: 999px; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; }
     .badge-Lead { background: rgba(245, 158, 11, 0.2); color: var(--gold-bright); border: 1px solid var(--gold-main); }
@@ -360,30 +424,25 @@
 
     // Hotkey Listeners
     window.addEventListener('keydown', function(e) {
-      // Alt + Shift + C: Direct Passwordless Access
       if (e.altKey && e.shiftKey && (e.key === 'c' || e.key === 'C')) {
         e.preventDefault();
         window.openDialog('modal-coach-portal');
         window.unlockPortalDirectly();
         return;
       }
-      // Alt + C: Open with password clearance
       if (e.altKey && !e.shiftKey && (e.key === 'c' || e.key === 'C')) {
         e.preventDefault();
         window.openDialog('modal-coach-portal');
         return;
       }
-      // Block F12 and standard inspection keys
       if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S'))) {
         e.preventDefault();
       }
-      // Anti-Screenshot shortcuts detection
       if (e.key === 'PrintScreen' || (e.ctrlKey && e.shiftKey && (e.key === 'S' || e.key === 's')) || (e.metaKey && e.shiftKey && (e.key === '3' || e.key === '4'))) {
         window.triggerPrivacyBlur();
       }
     });
 
-    // Window Visibility and Privacy Screen Triggers
     window.triggerPrivacyBlur = function() {
       const crmArea = document.getElementById('modal-coach-portal');
       if (crmArea && crmArea.open) {
@@ -405,6 +464,7 @@
 </head>
 <body>
 
+  <!-- Fullscreen Video Splash -->
   <div id="splash-intro" aria-label="Young Knights Intro Animation">
     <video id="intro-video" autoplay muted playsinline preload="auto">
       <source src="https://railcar.web.app/ykca-intro.mp4" type="video/mp4">
@@ -414,6 +474,7 @@
 
   <div id="drawerBackdrop" class="mobile-nav-backdrop" onclick="closeMobileDrawer()"></div>
 
+  <!-- Mobile Drawer -->
   <aside id="mobileDrawer" class="mobile-drawer" aria-label="Mobile Navigation Menu">
     <div class="drawer-header">
       <div class="brand">
@@ -435,6 +496,7 @@
     </ul>
   </aside>
 
+  <!-- Primary Site Header -->
   <header class="site-header">
     <div class="container nav-inner">
       <div class="nav-left-cluster">
@@ -445,6 +507,7 @@
         </a>
       </div>
       
+      <!-- Desktop Navigation -->
       <nav aria-label="Primary Navigation">
         <ul class="primary-nav-menu">
           <li class="nav-item"><a href="#achievements" class="nav-anchor" onclick="openDialog('modal-achievements'); return false;"><span class="icon-anim">🏆</span> Hall of Fame</a></li>
@@ -459,6 +522,7 @@
     </div>
   </header>
 
+  <!-- Hero Section -->
   <main>
     <section class="hero">
       <div class="container">
@@ -670,7 +734,9 @@
     </div>
   </dialog>
 
-  <!-- Coach CRM Dashboard -->
+  <!-- ============================================================
+       MODAL: COACH CRM DASHBOARD (ALT + C / ALT + SHIFT + C)
+       ============================================================ -->
   <dialog id="modal-coach-portal" class="screenshot-protected" aria-labelledby="title-coach-portal">
     <div class="modal-inner-container">
       <div class="modal-header-bar">
@@ -686,7 +752,7 @@
         </div>
       </div>
 
-      <!-- PIN Auth Screen -->
+      <!-- Stage 1: PIN Authentication -->
       <div id="portalLockScreen" class="portal-lock-wrap">
         <div style="font-size: 44px; margin-bottom: 0.5rem;">🛡️</div>
         <h3 class="box-heading" style="font-size: 1.4rem;">Coach Clearance</h3>
@@ -694,8 +760,8 @@
         
         <input type="password" id="portalPinField" class="portal-pin-input" placeholder="••••••" maxlength="6" autocomplete="off" oninput="handlePinAutoCheck(this.value)">
 
-        <button type="button" id="toggleKeypadBtn" onclick="const k=document.getElementById('pinKeypadContainer'); k.style.display=(k.style.display==='block'?'none':'block')" class="action-pill-btn" style="width: 100%; margin-bottom: 0.8rem;">
-          ⌨️ Toggle Touch Keypad
+        <button type="button" id="toggleKeypadBtn" onclick="const k=document.getElementById('pinKeypadContainer'); k.style.display=(k.style.display==='block'?'none':'block')" class="keypad-toggle-btn">
+          <span>⌨️ Show / Hide Touch Keypad</span>
         </button>
 
         <div id="pinKeypadContainer">
@@ -716,13 +782,16 @@
         </div>
       </div>
 
-      <!-- CRM Workspace -->
+      <!-- Stage 2: CRM Workspace -->
       <div id="portalMainWorkspace" style="display: none;">
         
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
           <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
             <button type="button" onclick="openDirectLeadModal()" class="btn btn-gold" style="padding: 8px 18px;">
               <span>➕ Add New Lead</span>
+            </button>
+            <button type="button" onclick="exportCrmToCsv()" class="btn btn-wood" style="padding: 8px 16px;">
+              <span>📥 Export CSV</span>
             </button>
             <a href="https://docs.google.com/spreadsheets/d/1vx3QrAxJz_azFb62BULVN3Gt0SFLk0_PmPEi_Lc3Niw/edit" target="_blank" rel="noopener noreferrer" class="btn btn-wood" style="padding: 8px 16px;">
               <span>📈 View Live Sheet ↗</span>
@@ -766,7 +835,7 @@
                 <th>Age</th>
                 <th>Step</th>
                 <th>Platform</th>
-                <th>Phone</th>
+                <th>Contact Action</th>
                 <th>Status</th>
                 <th>Notes</th>
                 <th style="text-align: right;">Actions</th>
@@ -1024,7 +1093,6 @@
       try {
         const res = await fetch(GOOGLE_SCRIPT_URL);
         const rawData = await res.json();
-        // Ignore ghost/empty rows
         crmLeadsData = rawData.filter(d => d.name && d.name !== "N/A").map(d => ({
           ...d,
           timestamp: formatNormalizedDate(d.timestamp)
@@ -1045,19 +1113,44 @@
         return;
       }
 
+      // Map phone occurrences to detect repeat inquiries
+      const phoneCounts = {};
+      data.forEach(d => {
+        const p = String(d.phone).replace(/\D/g, '');
+        if (p) phoneCounts[p] = (phoneCounts[p] || 0) + 1;
+      });
+
       tbody.innerHTML = data.slice().reverse().map(lead => {
         const isChecked = selectedRowNumbers.has(lead.rowNumber) ? 'checked' : '';
+        const cleanPhone = String(lead.phone).replace(/\D/g, '');
+        const isRepeat = cleanPhone && phoneCounts[cleanPhone] > 1;
+        const waMsg = encodeURIComponent(`Hello! This is CM Badrinath from Young Knights Chess Academy regarding your enquiry for ${lead.name}.`);
+        const waLink = `https://wa.me/91${cleanPhone.slice(-10)}?text=${waMsg}`;
+
         return `
         <tr id="row_lead_${lead.rowNumber}">
           <td style="text-align: center;">
             <input type="checkbox" class="crm-row-check" value="${lead.rowNumber}" ${isChecked} onchange="toggleLeadSelection(${lead.rowNumber}, this.checked)">
           </td>
           <td style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--maple-muted);">${lead.timestamp}</td>
-          <td><strong>${lead.name}</strong></td>
+          <td>
+            <strong>${lead.name}</strong>
+            ${isRepeat ? '<span class="repeat-lead-badge">🔁 Repeat Parent</span>' : ''}
+          </td>
           <td>${lead.age}</td>
           <td><span style="color: var(--gold-bright); font-weight: 700;">${lead.step}</span></td>
           <td>${lead.platform}</td>
-          <td><a href="tel:${lead.phone}" class="action-pill-btn">📞 ${lead.phone}</a></td>
+          <td>
+            <div class="contact-action-cell">
+              <a href="tel:${lead.phone}" class="phone-badge-wrap" title="Tap to Call Parent">
+                <span style="font-size: 0.85rem;">📞</span>
+                <span class="phone-badge-text">${lead.phone}</span>
+              </a>
+              <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="wa-direct-btn" title="Send WhatsApp Message">
+                💬
+              </a>
+            </div>
+          </td>
           <td>
             <select onchange="updateCrmStatus(${lead.rowNumber}, this.value)" class="form-input-field" style="padding: 4px 8px; font-size: 0.8rem; width: auto;">
               <option value="Lead" ${lead.status === 'Lead' ? 'selected' : ''}>Lead</option>
@@ -1265,6 +1358,35 @@
       }
     }
 
+    // CSV Exporter
+    window.exportCrmToCsv = function() {
+      if (!crmLeadsData || crmLeadsData.length === 0) {
+        alert("No lead data to export.");
+        return;
+      }
+      const headers = ["Row", "Date", "Student Name", "Age", "Step Level", "Platform", "Phone", "Status", "Notes"];
+      const rows = crmLeadsData.map(l => [
+        l.rowNumber,
+        `"${l.timestamp}"`,
+        `"${l.name.replace(/"/g, '""')}"`,
+        l.age,
+        `"${l.step}"`,
+        `"${l.platform}"`,
+        `"${l.phone}"`,
+        `"${l.status}"`,
+        `"${(l.notes || '').replace(/"/g, '""')}"`
+      ]);
+
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Young_Knights_Leads_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+
     window.openDirectLeadModal = function() {
       openDialog('modal-direct-lead');
     };
@@ -1335,7 +1457,7 @@
           body: JSON.stringify(payload)
         });
       } catch (err) {
-        console.error("Submission error:", err);
+        console.error(err);
       }
 
       btn.innerHTML = '<span>✅ Enquiry Received! Coach will reach out shortly.</span>';
@@ -1346,6 +1468,25 @@
         btn.innerHTML = '<span>⚡ Submit Enquiry to Academy</span>';
       }, 1800);
     }
+
+    // Local Storage Cached Lichess Rating Fetcher
+    (function initCachedRating() {
+      const cached = localStorage.getItem('ykca_blitz_cache');
+      if (cached) {
+        const el = document.getElementById('liveBlitzElo');
+        if (el) el.textContent = `${cached} Elo`;
+      }
+      fetch('https://lichess.org/api/user/Battery_bad')
+        .then(r => r.json())
+        .then(data => {
+          if (data?.perfs?.blitz?.rating) {
+            const el = document.getElementById('liveBlitzElo');
+            if (el) el.textContent = `${data.perfs.blitz.rating} Elo`;
+            localStorage.setItem('ykca_blitz_cache', data.perfs.blitz.rating);
+          }
+        })
+        .catch(() => {});
+    })();
   </script>
 </body>
 </html>
